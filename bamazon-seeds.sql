@@ -27,4 +27,4 @@ VALUES
     ("Troll 2", "Movies", 50, 80),
     ("80 Foot Long Garden Hose", "Household", 80, 80),
     ("Finely Sharpened Katana", "Household", 200, 50)
-    
+
