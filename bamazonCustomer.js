@@ -77,6 +77,8 @@ function inquireCustomer() {
       
       `)
       })
+      } else {
+        console.log("Insufficient Quantity!")
       }
       listProducts();
       
