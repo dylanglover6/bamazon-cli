@@ -22,7 +22,7 @@ function listProducts() {
     for (i=0; i < data.length; i++) {
       console.log(`Product SKU: ${data[i].item_id} | Product Name: ${data[i].product_name} | Department: ${data[i].department_name} | Price: $${data[i].price} | Number in Stock: ${data[i].stock_quantity}`)
     }
-      connection.end();
+      
       inquireCustomer();
   });
    
@@ -47,7 +47,42 @@ function inquireCustomer() {
   ];
 
   inquirer.prompt(questions).then(answers=> {
-    console.log(answers.purchase.sku);
+    var purchaseId = answers.purchase.sku;
+    var purchaseQuantity = answers.purchase.quantity;
+
+    let query = connection.query("SELECT * FROM products WHERE ?", {
+      item_id: purchaseId
+    }, function (err, data) {
+      if (err) throw err;
+
+      var itemInfo = data[0];
+
+      if (purchaseQuantity <= itemInfo.stock_quantity) {
+        console.log("Thanks for your purchase!");
+
+        var updateInventory = "UPDATE products SET ? where ?"
+
+        connection.query(updateInventory, [{
+          stock_quantity: itemInfo.stock_quantity - purchaseQuantity
+        },
+        {
+          item_id: purchaseId
+        }
+      ], function (err, data) {
+        if (err) throw err
+        console.log("Enjoy your purchase. Your total is $" + (itemInfo.price * purchaseQuantity).toFixed(2));
+        console.log(`
+        
+        Would you like to make another purchase?
+      
+      `)
+      })
+      }
+      listProducts();
+      
+
+    })
+
   })
 };
 
